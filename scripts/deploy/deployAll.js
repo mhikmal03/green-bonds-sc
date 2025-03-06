@@ -12,9 +12,16 @@ async function main() {
     const mrvAddress = await mrv.getAddress();
     console.log(`✅ MRV Contract deployed at: ${mrvAddress}`);
 
+    console.log("🚀 Deploying Mock Stablecoin...");
+    const Stablecoin = await hre.ethers.getContractFactory("MockStablecoin");
+    const stablecoin = await Stablecoin.deploy();
+    await stablecoin.waitForDeployment();
+    const stablecoinAddress = await stablecoin.getAddress();
+    console.log(`✅ MockStablecoin deployed at: ${stablecoinAddress}`);
+
     // 2️⃣ Deploy YieldPool.sol
     console.log("🚀 Deploying YieldPool Contract...");
-    const stablecoinAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"; // Ganti dengan alamat stablecoin di lokal
+    // const stablecoinAddress = "0xa513E6E4b8f2a923D98304ec87F64353C4D5C853"; // Ganti dengan alamat stablecoin di lokal
     const yieldRate = 5; // 5% Yield per tahun
     const payoutInterval = 30 * 86400; // Bulanan (30 hari)
     const maturityDate = Math.floor(Date.now() / 1000) + 86400 * 365; // 1 Tahun Maturity
@@ -36,7 +43,7 @@ async function main() {
     console.log("🚀 Deploying GreenBondV3 Contract...");
     const GreenBondV3 = await hre.ethers.getContractFactory("GreenBondV3");
     const greenBond = await GreenBondV3.deploy(
-        hre.ethers.parseUnits("100000", 18), // 100,000 GBOND
+        hre.ethers.parseUnits("1000000000", 18), // 100,000,000,000 GBOND 1.000.000.000
         maturityDate,
         yieldRate,
         12, // Prefund untuk 12 bulan pertama
